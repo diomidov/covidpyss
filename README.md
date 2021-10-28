@@ -1,6 +1,6 @@
 # Covidpyss
 
-This project consists of a python API (`covidpass_api.py`) and a command-line interface (`covidpass.py`) for [MIT Covidpass](https://covidpass.mit.edu).
+This project consists of a python API (`covidpass_api.py`) and a command-line interface (`covidpass.py`) for [MIT COVID Pass](https://covidpass.mit.edu).
 
 Main features:
 * Submitting daily attestation.
