@@ -66,8 +66,8 @@ def print_status(session):
                 print(f'{r.title_web} has expired on {r.next_completion}!')
             elif warn_hours and r.next_completion - now < timedelta(hours=warn_hours):
                 print(f'{r.title_web} expires on {r.next_completion:%Y-%m-%d %H:%M} (in {r.next_completion - now})!')
-        if r.status == 'incomplete':
-            print(f'r{title_web} is incomplete!')
+        elif r.status == 'incomplete':
+            print(f'{r.title_web} is incomplete!')
 
     print()
     test_results = get_test_results(session)
