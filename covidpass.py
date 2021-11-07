@@ -144,8 +144,8 @@ def main():
     try:
         credentials = read_credentials()
     except Exception as e:
-        print('Could not open `credentials.json` file.')
-        print('Make sure it is in your currect working directory.')
+        print('Could not open `%s` file.' % credentials_filename)
+        print('Make sure it is in the covidpyss directory or your currect working directory.')
         raise e
 
     try:
