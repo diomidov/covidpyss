@@ -23,7 +23,12 @@ Main features:
     See [touchstone-auth readme](https://github.com/meson800/touchstone-auth#quickstart) for more details.
 4. Run `./covidpass.py help` to see the list of available commands.
 
-The first time you run it (and once month after that), you'll need to accept the Duo notification on your phone.
+The first time you run it (and once a month after that), you'll need to accept the Duo notification on your phone.
+
+The `credentials.json` file can be located in the same directory as
+`covidpass.py` or in your current working directory.  A `cookies.json` file
+will be created/updated in the same directory, to keep your Duo
+authentication.
 
 ## API
 

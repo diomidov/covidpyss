@@ -1,8 +1,9 @@
 import json
+import os
 import sys
 import time
 from datetime import datetime
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from dataclasses_json import dataclass_json, config
 from marshmallow import fields
 from touchstone_auth import TouchstoneSession
@@ -23,17 +24,35 @@ def mk_optional_datetime_field():
 class Credentials:
     certfile: str = './cert.p12'
     password: str = ''
+    dirname: str = ''  # directory containing credentials file
+
+credentials_filename = 'credentials.json'
+credentials_dirnames = [os.path.dirname(__file__), os.curdir]
 
 def read_credentials():
-    with open('credentials.json') as cred_file:
-        return Credentials.from_dict(json.load(cred_file))
+    for dirname in credentials_dirnames:
+        cred_filename = os.path.join(dirname, credentials_filename)
+        if os.path.exists(cred_filename):
+            break
+    else:
+        raise RuntimeError("No %s file in %s" % (credentials_filename,
+            ' or '.join(credentials_dirnames)))
+    with open(cred_filename) as cred_file:
+        cred = Credentials.from_dict(json.load(cred_file))
+        # If certfile is a relative path, treat it as relative to the
+        # directory containing credentials.json
+        dirname = os.path.dirname(cred_filename)
+        cred = replace(cred,
+            dirname = dirname,
+            certfile = os.path.join(dirname, cred.certfile))
+        return cred
 
 def Session(credentials):
     return TouchstoneSession(
         base_url=r'https://atlas-auth.mit.edu/oauth2/authorize?identity_provider=Touchstone&redirect_uri=https://covidpass.mit.edu&response_type=TOKEN&client_id=2ao42ccnajj7jpqd7h059n7eoc&scope=covid19/user%20openid',
         pkcs12_filename=credentials.certfile,
         pkcs12_pass=credentials.password,
-        cookiejar_filename='cookies.pickle')
+        cookiejar_filename=os.path.join(credentials.dirname, 'cookies.pickle'))
 
 
 # TODO: add all fields
